@@ -2,7 +2,7 @@
   "name": "mempass",
   "version": "1.0.0",
   "description": "App provides memorable, strong passwords",
-  "main": "index.js",
+  "main": "mempass.js",
   "scripts": {
     "test": "jest"
   },
@@ -15,7 +15,7 @@
     "generate",
     "generator"
   ],
-  "author": "Alex Stout",
+  "author": "Alex Stout <astoutj@gmail.com> (https://alexstout.weebly.com)",
   "license": "ISC",
   "dependencies": {
     "lodash": "^4.17.10",

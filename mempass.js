@@ -1,80 +1,13 @@
 const wordlist = require('wordlist-english');
 const _ = require('lodash');
+const { internalDefaults, externalDefaults, limits } = require('./AppConfig');
+const { transform, transforms } = require('./transform');
+const { randomNumberOfLength } = require('./utils');
 
 const eng1 = wordlist['english/10'];
 const eng2 = wordlist['english/20'];
 const eng3 = wordlist['english/35'];
 const words = eng1.concat(eng2).concat(eng3);
-
-const transforms = {
-  upper: 'upper', // all upper case
-  lower: 'lower', // all lower case
-  alternating: 'alternating', // EVERY.other.CASE
-  default: 'alternating', // defined default
-  first: 'first', // First.Letter.Capitalized
-  reverseFirst: 'reverseFirst', // 'fIRST.lETTER.nOT.cAPITALIZED'
-  last: 'last', // lasT.letteR.capitalizeD
-};
-
-const limits = {
-  minCount: 1,
-  maxCount: 10,
-  minLength: 8,
-  maxLength: 1024,
-  minWordLength: 1,
-  maxWordLength: 45, // yep, look it up
-  numMinLength: 1,
-  numMaxLength: 4,
-  numWordsMin: 1,
-  numWordsMax: 256,
-  symbols: ['.', '-', ':', '?', '*', '$', '!', '@', '#', '%', '^', '&', '+', '=', '_'],
-};
-
-const externalDefaults = {
-  count: 3,
-  minLength: 8,
-  maxLength: 32,
-};
-
-const internalDefaults = {
-  minWordLength: 4,
-  maxWordLength: 6,
-  numLength: 2,
-  numWords: 2,
-  startWithLetter: false,
-  symbols: ['.', '-', ':'],
-  transform: transforms.default,
-};
-
-const randomNumberOfLength = (length = internalDefaults.numLength) => (
-  _.join(_.times(length, () => _.random(9)), '')
-);
-
-const transform = (wordSet = [], setting = internalDefaults.transform) => {
-  switch (setting) {
-    case transforms.lower:
-      return wordSet.map(_.toLower);
-    case transforms.upper:
-      return wordSet.map(_.toUpper);
-    case transforms.first:
-      return wordSet.map(_.capitalize);
-    case transforms.reverseFirst:
-      return wordSet.map(w => _.lowerFirst(_.toUpper(w)));
-    case transforms.last:
-      return wordSet.map((w) => {
-        let r = _.toLower(w);
-        let c = _.last(r);
-        r = r.slice(0, -1);
-        c = _.toUpper(c);
-        r = r.concat(c);
-        return r;
-      });
-    case transforms.alternating:
-    case transforms.default:
-    default:
-      return wordSet.map(((w, i) => (i % 2 ? _.toLower(w) : _.toUpper(w))));
-  }
-};
 
 const genPasswd = (configuration = internalDefaults) => {
   const config = _.defaults(configuration, internalDefaults);
@@ -138,13 +71,8 @@ const genPasswds = (externalConfig = externalDefaults, internalConfig = internal
 };
 
 module.exports = {
-  limits,
-  internalDefaults,
-  externalDefaults,
   genPasswd,
   genPasswds,
-  randomNumberOfLength,
-  transform,
   transforms,
 };
 
